@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+    <title>
+        <%= locals.title %>
+    </title>
+</head>
+
+<body>
+    <div class="container-fluid d-flex mx-3" style="justify-content: space-between;">
+
+        <div class=" m-3 form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="dark">
+            <label class="form-check-label" for="flexSwitchCheckDefault">Dark Mode</label>
+        </div>
+        <div class=" m-3 form-check form-switch">
+            <a href="/logout" style="display: none;" id="logout"><button class="btn btn-primary">Log
+                    Out</button></a>
+        </div>
+    </div>
+
+    <script>
+        let root = document.getElementsByTagName('html')[0];
+        let dark = document.getElementById('dark');
+        // handle dark mode using local storage
+        root.setAttribute('data-bs-theme', localStorage.getItem('data-theme'));
+        if (root.getAttribute('data-bs-theme') == 'dark') {
+            dark.checked = true;
+        }
+        else {
+            dark.checked = false;
+        }
+        const buttons = document.getElementsByTagName('button')
+        console.log(buttons);
+        dark.addEventListener('click', () => {
+            if (root.getAttribute('data-bs-theme') == 'dark') {
+                root.setAttribute('data-bs-theme', 'light');
+                window.localStorage.setItem('data-theme', 'light');
+
+            }
+            else {
+                root.setAttribute('data-bs-theme', 'dark');
+                window.localStorage.setItem('data-theme', 'dark');
+
+            }
+
+
+            for (let button of buttons) {
+                if (button.classList.contains('btn-outline-light')) {
+                    button.classList.replace('btn-outline-light', 'btn-outline-dark')
+                } else {
+                    button.classList.replace('btn-outline-dark', 'btn-outline-light')
+                }
+
+            }
+        })
+
+
+        const urlRegex = /^(https?:\/\/([\w-]+|([0-9]+\.?)*):5001)(\/dashboard)$/;
+        let logout = document.getElementById('logout');
+        if (urlRegex.test(window.location.href)) {
+            logout.style.display = 'block';
+        }
+        else {
+            logout.style.display = 'none';
+        }
+
+
+    </script>

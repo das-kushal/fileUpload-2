@@ -1,0 +1,150 @@
+<%- include('./partials/header.ejs')%>
+    <style>
+        /* Modal styles */
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        #modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            background: #fff;
+            padding: 10px;
+            z-index: 2;
+        }
+
+        #close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            z-index: 2;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            box-shadow: none;
+            color: #007bff;
+        }
+
+        .head {
+            color: #007bff;
+        }
+
+        .embed-style {
+            padding: .5rem;
+            width: 100%;
+            /* margin: 5px; */
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+    </style>
+    <div class="container my-3">
+
+        <h1 class="head text-center my-4">
+            Welcome <% locals.name %>
+                To File Upload Dashboard
+        </h1>
+
+
+        <div class="container" style="display: flex;justify-content: center;width: 100vw;">
+
+            <form class="form-control"
+                style="display: flex;justify-content: space-around;align-items: center;border:none;" action="/upload"
+                method="POST" enctype="multipart/form-data">
+                <input type="file" id="inpfile" name="myfile">
+                <button class="btn btn-primary">Submit</button>
+
+            </form>
+        </div>
+
+
+
+    </div>
+
+    <div id="modal" style="display:none">
+        <div id="modal-content"></div>
+        <button id="close-modal">❌</button>
+    </div>
+
+
+
+    <div id="file-list" class="container-fluid d-flex row mx-2 my-4">
+
+    </div>
+
+    <script defer>
+
+        fetch('/files')
+            .then(res => { return res.json() })
+            .then(files => {
+                console.log(files);
+                const fileList = document.getElementById('file-list');
+                files.forEach(file => {
+                    console.log('FILE ', file);
+                    const card = document.createElement('div')
+                    const cardBody = document.createElement('div')
+                    const cardTop = document.createElement('div')
+
+                    card.className = 'card'
+                    cardTop.className = 'card-img-top'
+                    cardTop.style.padding = '0px'
+                    card.style.margin = '1rem'
+                    card.style.width = '20rem'
+                    const embed = document.createElement('object');
+                    embed.className = 'embed-style'
+                    embed.data = file.path;
+                    console.log("FILE PATH ", file.path);
+                    embed.width = "300rem";
+                    embed.height = "300px";
+                    cardTop.appendChild(embed);
+                    const button = document.createElement('button')
+                    const viewFull = document.createElement('button')
+                    button.textContent = 'Download';
+                    viewFull.textContent = 'View'
+
+                    button.onclick = () => {
+                        window.location = '/download/' + file.name;
+                    }
+
+                    viewFull.onclick = () => {
+                        const modal = document.getElementById("modal");
+                        const modalContent = document.getElementById("modal-content");
+                        const closeModal = document.getElementById("close-modal");
+                        modalContent.innerHTML = "";
+                        const fileToView = document.createElement("object");
+                        fileToView.width = window.innerWidth / 1.2
+                        fileToView.height = window.innerHeight / 1.2
+                        fileToView.data = file.path;
+                        modalContent.appendChild(fileToView);
+                        modal.style.display = "block";
+                        closeModal.onclick = () => {
+                            modal.style.display = "none";
+                        }
+                    }
+
+
+                    button.className = 'btn btn-primary mx-2'
+                    viewFull.className = 'btn btn-primary mx-2'
+                    cardBody.className = 'card-body'
+                    cardBody.appendChild(button);
+                    cardBody.appendChild(viewFull);
+                    card.append(cardTop)
+                    card.append(cardBody)
+                    fileList.append(card)
+                });
+            });
+    </script>
+    <%- include('./partials/footer.ejs')%>

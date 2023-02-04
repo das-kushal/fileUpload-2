@@ -1,0 +1,31 @@
+<%- include('./partials/header.ejs')%>
+    <div style="display: flex; align-items: center;justify-content: center;height: 85vh;">
+
+        <div class="text-center center-div mx-4" style="width:100vw;max-width: 500px;">
+            <div class="container  border py-4">
+
+                <div class="title pb-5">
+
+                    <h2 class="text-center" style="color:#28a745">Login Page</h2>
+                    <span>Login for existing users</span>
+                </div>
+                <form action="/login" method="post">
+                    <div class="form-group mb-3">
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Enter name">
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="password" class="form-control" id="password" name="password"
+                            placeholder="Enter password">
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-success">Login</button>
+                </form>
+
+                <div class="form-text my-4">
+                    <span>Don't Have An Account</span>
+                    <a href="/Register">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('./partials/footer.ejs')%>
