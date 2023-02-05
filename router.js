@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const passport = require('passport');
 const intiializePassport = require('./config/passport');
-const { isAuth } = require('./config/auth');
+const { isAuth, isNotAuth, } = require('./config/auth');
 const Client = require('./models/client');
 const multer = require('multer');
 const path = require('path');
@@ -15,11 +15,11 @@ router.use(passport.session());
 intiializePassport(passport);
 
 // home route
-router.get('/login', (req, res) => {
+router.get('/login', isNotAuth, (req, res) => {
     res.render('login', { title: 'Login Page' });
 });
 
-router.get('/register', (req, res) => {
+router.get('/register', isNotAuth, (req, res) => {
     res.render('register', { title: 'Register Page' });
 });
 
@@ -61,8 +61,6 @@ router.get('/login-failure', isAuth, (req, res) => {
 
 router.get('/', (req, res) => {
     if (req.isAuthenticated()) {
-        // const client = Client.findById(req.session.passport.user);
-        // console.log('CLIENT** ', client);
         res.redirect('/dashboard');
     }
     res.render('index', { title: 'Index Page' });

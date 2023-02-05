@@ -4,7 +4,14 @@ function isAuth(req, res, next) {
     if (req.isAuthenticated()) {
         next();
     }
-    res.status(401).render('errorMessage', { error: 'Unauthorized' })
+    res.redirect('/login');
 }
 
-module.exports = { isAuth };
+function isNotAuth(req, res, next) {
+    if (req.isAuthenticated()) {
+        return res.redirect('/dashboard');
+    }
+    next();
+}
+
+module.exports = { isAuth, isNotAuth };
